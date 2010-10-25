@@ -26,10 +26,8 @@ Please read {guard usage doc}[http://github.com/guard/guard#readme]
 
 == Guardfile
 
-Bundler guard can be really be adapated to all kind of projects.
+Passenger guard can be really be adapated to all kind of rack project with passenger.
 Please read {guard doc}[http://github.com/guard/guard#readme] for more info about Guardfile DSL.
-
-Attention place bundler guard before other is recommended.
 
 === Standard rails app
 

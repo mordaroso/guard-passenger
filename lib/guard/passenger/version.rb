@@ -1,5 +1,5 @@
 module Guard
-  module BundlerVersion
+  module PassengerVersion
     VERSION = '0.0.2'
   end
 end

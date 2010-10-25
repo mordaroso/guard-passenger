@@ -4,7 +4,7 @@ require 'guard/passenger/version'
 
 Gem::Specification.new do |s|
   s.name = 'guard-passenger'
-  s.version = Guard::BundlerVersion::VERSION
+  s.version = Guard::PassengerVersion::VERSION
   s.platform = Gem::Platform::RUBY
   s.authors = ['Fabio Kuhn']
   s.email = ['mordaroso@gmail.com']
