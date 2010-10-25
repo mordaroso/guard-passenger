@@ -10,7 +10,7 @@ module Guard
 
     # Call once when guard starts
     def start
-      true
+      UI.info "Guard::Passenger is guarding your changes!"
     end
 
     # Call with Ctrl-C signal (when Guard quit)
@@ -34,9 +34,16 @@ module Guard
     end
 
     private
-    def restart_passenger
-      system 'touch tmp/restart.txt'
-    end
+      def restart_passenger
+        result = system 'touch tmp/restart.txt'
+        if result
+          UI.info 'Successfully restarted passenger'
+        else
+          UI.info 'Restarting passenger failed'
+        end
+
+        result
+      end
 
   end
 end
