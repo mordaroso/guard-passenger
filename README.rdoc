@@ -36,6 +36,17 @@ Please read {guard doc}[http://github.com/guard/guard#readme] for more info abou
       watch('config/.*\.rb')
     end
 
+=== Passenger standalone
+
+To use passenger standalone you can pass options to the guard. Guard::Passenger will start passenger on startup and take it down on exit.
+By default passenger standalone is deactivated and port is set to 3000.
+
+    guard 'passenger', :standalone => true, :port => 3001 do
+      watch('lib/.*\.rb')
+      watch('config/.*\.rb')
+    end
+
+
 == Development
 
 - Source hosted at {GitHub}[http://github.com/guard/guard-passenger]
