@@ -6,6 +6,9 @@ gemspec
 # optional development dependencies
 require 'rbconfig'
 
+gem 'guard-bundler'
+gem 'guard-rspec'
+
 if Config::CONFIG['target_os'] =~ /darwin/i
   gem 'rb-fsevent', '>= 0.3.2'
   gem 'growl', '~> 1.0.3'
