@@ -32,20 +32,20 @@ describe Guard::Passenger do
   context 'start' do
 
     it 'should not call `passenger start\' command' do
-      subject.should_not_receive(:system).with('passenger start -p 3000 -d')
+      Guard::RSpec::Runner.should_not_receive(:start_passenger)
       subject.start
     end
 
     it 'should call `passenger start\' command if standalone is set' do
       subject.should_receive(:standalone?).and_return(true)
-      subject.should_receive(:system).with('passenger start -p 3000 -d')
+      Guard::Passenger::Runner.should_receive(:start_passenger).with(3000).and_return(true)
       subject.start
     end
 
     it 'should call `passenger start -p 1337\' command if standalone is set and port is set to 1337' do
       subject.should_receive(:standalone?).and_return(true)
-      subject.should_receive(:port).exactly(2).and_return(1337)
-      subject.should_receive(:system).with('passenger start -p 1337 -d')
+      subject.should_receive(:port).and_return(1337)
+      Guard::Passenger::Runner.should_receive(:start_passenger).with(1337).and_return(true)
       subject.start
     end
 
@@ -54,13 +54,13 @@ describe Guard::Passenger do
   context 'stop' do
 
     it 'should not call `passenger stop\' command' do
-      subject.should_not_receive(:system).with('passenger stop')
+      Guard::RSpec::Runner.should_not_receive(:stop_passenger)
       subject.stop
     end
 
     it 'should call `passenger stop\' command if standalone is set' do
       subject.should_receive(:standalone?).and_return(true)
-      subject.should_receive(:system).with('passenger stop')
+      Guard::Passenger::Runner.should_receive(:stop_passenger).and_return(true)
       subject.stop
     end
 
@@ -69,12 +69,12 @@ describe Guard::Passenger do
   context 'reload' do
 
     it 'should call `touch tmp/restart.txt\' command' do
-      subject.should_receive(:system).with('touch tmp/restart.txt').and_return(true)
+      Guard::Passenger::Runner.should_receive(:restart_passenger).and_return(true)
       subject.reload.should be_true
     end
 
     it 'should return false if `touch tmp/restart.txt\' command fail' do
-      subject.should_receive(:system).with('touch tmp/restart.txt').and_return(false)
+      Guard::Passenger::Runner.should_receive(:restart_passenger).and_return(false)
       subject.reload.should be_false
     end
 
@@ -83,7 +83,7 @@ describe Guard::Passenger do
   context 'run_on_change' do
 
     it 'should call `touch tmp/restart.txt\' command' do
-      subject.should_receive(:system).with('touch tmp/restart.txt').and_return(true)
+      Guard::Passenger::Runner.should_receive(:restart_passenger).and_return(true)
       subject.reload.should be_true
     end
 

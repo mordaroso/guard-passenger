@@ -1,9 +1,17 @@
 require 'guard'
 require 'guard/guard'
+require 'rubygems'
 
 module Guard
   class Passenger < Guard
 
+    autoload :Runner, 'guard/passenger/runner'
+
+    attr_reader :port
+
+    def standalone?
+      @standalone
+    end
 
     # ================
     # = Guard method =
@@ -19,7 +27,7 @@ module Guard
     def start
       UI.info "Guard::Passenger is guarding your changes!"
       if standalone?
-        start_passenger
+        Runner.start_passenger(port)
       else
         true
       end
@@ -28,7 +36,7 @@ module Guard
     # Call with Ctrl-C signal (when Guard quit)
     def stop
       if standalone?
-        stop_passenger
+        Runner.stop_passenger
       else
         true
       end
@@ -36,7 +44,7 @@ module Guard
 
     # Call with Ctrl-Z signal
     def reload
-      restart_passenger
+      Runner.restart_passenger
     end
 
     # Call with Ctrl-/ signal
@@ -46,46 +54,7 @@ module Guard
 
     # Call on file(s) modifications
     def run_on_change(paths)
-      restart_passenger
+      Runner.restart_passenger
     end
-
-    def standalone?
-      @standalone
-    end
-
-    def port
-      @port
-    end
-
-    private
-      def restart_passenger
-        result = system 'touch tmp/restart.txt'
-        if result
-          UI.info 'Successfully restarted passenger'
-        else
-          UI.info 'Restarting passenger failed'
-        end
-
-        result
-      end
-
-      def start_passenger
-        result = system "passenger start -p #{port} -d"
-        if result
-          UI.info "Passenger standalone startet at port #{port}"
-        else
-          UI.info "Passenger standalone failed to start at port #{port}"
-        end
-        result
-      end
-
-      def stop_passenger
-        result = system 'passenger stop'
-        if result
-          UI.info "Passenger standalone stopeed"
-        end
-        true
-      end
-
   end
 end
