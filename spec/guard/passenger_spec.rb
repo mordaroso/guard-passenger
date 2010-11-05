@@ -27,6 +27,17 @@ describe Guard::Passenger do
       end
     end
 
+    context 'env' do
+      it 'should be development by default' do
+        subject.env.should eql 'development'
+      end
+
+      it 'should be set to production' do
+        subject = Guard::Passenger.new([], {:env => 'production'})
+        subject.env.should eql 'production'
+      end
+    end
+
   end
 
   context 'start' do
@@ -38,14 +49,22 @@ describe Guard::Passenger do
 
     it 'should call `passenger start\' command if standalone is set' do
       subject.should_receive(:standalone?).and_return(true)
-      Guard::Passenger::Runner.should_receive(:start_passenger).with(3000).and_return(true)
+      Guard::Passenger::Runner.should_receive(:start_passenger).with(3000, 'development').and_return(true)
       subject.start
     end
 
     it 'should call `passenger start -p 1337\' command if standalone is set and port is set to 1337' do
       subject.should_receive(:standalone?).and_return(true)
       subject.should_receive(:port).and_return(1337)
-      Guard::Passenger::Runner.should_receive(:start_passenger).with(1337).and_return(true)
+      Guard::Passenger::Runner.should_receive(:start_passenger).with(1337, 'development').and_return(true)
+      subject.start
+    end
+
+    it 'should call `passenger start -p 1337\' command if standalone is set, port is set to 1337 and environment is production' do
+      subject.should_receive(:standalone?).and_return(true)
+      subject.should_receive(:port).and_return(1337)
+      subject.should_receive(:env).and_return('production')
+      Guard::Passenger::Runner.should_receive(:start_passenger).with(1337, 'production').and_return(true)
       subject.start
     end
 

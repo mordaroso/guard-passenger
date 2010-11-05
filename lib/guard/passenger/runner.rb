@@ -14,9 +14,9 @@ module Guard
           result
         end
 
-        def start_passenger(port)
+        def start_passenger(port, environment)
           if passenger_standalone_installed?
-            result = system "passenger start -p #{port} -d"
+            result = system "passenger start -p #{port} -d -e #{environment}"
             if result
               UI.info "Passenger standalone startet at port #{port}"
             else

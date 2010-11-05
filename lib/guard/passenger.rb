@@ -7,7 +7,7 @@ module Guard
 
     autoload :Runner, 'guard/passenger/runner'
 
-    attr_reader :port
+    attr_reader :port, :env
 
     def standalone?
       @standalone
@@ -21,13 +21,14 @@ module Guard
       super
       @standalone = options[:standalone].nil? ? false : options[:standalone]
       @port = options[:port].nil? ? 3000 : options[:port]
+      @env = options[:env].nil? ? 'development' : options[:env]
     end
 
     # Call once when guard starts
     def start
       UI.info "Guard::Passenger is guarding your changes!"
       if standalone?
-        Runner.start_passenger(port)
+        Runner.start_passenger(port, env)
       else
         true
       end

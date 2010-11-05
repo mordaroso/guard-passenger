@@ -5,28 +5,34 @@ describe Guard::Passenger::Runner do
 
   context 'passenger start' do
 
-    it 'should start passenger with port 3000' do
-      subject.should_receive(:system).with('passenger start -p 3000 -d').and_return(true)
+    it 'should start passenger with port 3000 and development environment' do
+      subject.should_receive(:system).with('passenger start -p 3000 -d -e development').and_return(true)
       subject.should_receive(:gem).with("passenger", ">=3.0.0").and_return(true)
-      subject.start_passenger(3000).should be_true
+      subject.start_passenger(3000, 'development').should be_true
+    end
+
+    it 'should start passenger with port 3000 and production environment' do
+      subject.should_receive(:system).with('passenger start -p 3000 -d -e production').and_return(true)
+      subject.should_receive(:gem).with("passenger", ">=3.0.0").and_return(true)
+      subject.start_passenger(3000, 'production').should be_true
     end
 
     it 'should start passenger with port 1337' do
-      subject.should_receive(:system).with('passenger start -p 1337 -d').and_return(true)
+      subject.should_receive(:system).with('passenger start -p 1337 -d -e development').and_return(true)
       subject.should_receive(:gem).with("passenger", ">=3.0.0").and_return(true)
-      subject.start_passenger(1337).should be_true
+      subject.start_passenger(1337, 'development').should be_true
     end
 
     it 'should fail to start passenger with port 1' do
-      subject.should_receive(:system).with('passenger start -p 1 -d').and_return(false)
+      subject.should_receive(:system).with('passenger start -p 1 -d -e development').and_return(false)
       subject.should_receive(:gem).with("passenger", ">=3.0.0").and_return(true)
-      subject.start_passenger(1).should be_false
+      subject.start_passenger(1, 'development').should be_false
     end
 
     it 'should fail to start passenger without passenger 3 installed' do
-      subject.should_not_receive(:system).with('passenger start -p 3000 -d')
+      subject.should_not_receive(:system).with('passenger start -p 3000 -d -e development')
       subject.should_receive(:passenger_standalone_installed?).and_return(false)
-      subject.start_passenger(3000).should be_false
+      subject.start_passenger(3000, 'development').should be_false
     end
 
   end
