@@ -51,14 +51,19 @@ describe Guard::Passenger::Runner do
 
   context 'passenger stop' do
 
-    it 'should stop passenger' do
-      subject.should_receive(:system).with('passenger stop').and_return(true)
-      subject.stop_passenger.should be_true
+    it 'should stop passenger at port 3000' do
+      subject.should_receive(:system).with('passenger stop -p 3000').and_return(true)
+      subject.stop_passenger(3000).should be_true
+    end
+
+    it 'should stop passenger at port 3001' do
+      subject.should_receive(:system).with('passenger stop -p 3001').and_return(true)
+      subject.stop_passenger(3001).should be_true
     end
 
     it 'should fail to stop passenger' do
-      subject.should_receive(:system).with('passenger stop').and_return(false)
-      subject.stop_passenger.should be_true
+      subject.should_receive(:system).with('passenger stop -p 3000').and_return(false)
+      subject.stop_passenger(3000).should be_true
     end
 
   end

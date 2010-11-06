@@ -29,8 +29,8 @@ module Guard
           end
         end
 
-        def stop_passenger
-          result = system 'passenger stop'
+        def stop_passenger(port)
+          result = system "passenger stop -p #{port}"
           if result
             UI.info "Passenger standalone stopped"
           end

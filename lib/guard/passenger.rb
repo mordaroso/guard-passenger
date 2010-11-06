@@ -37,7 +37,7 @@ module Guard
     # Call with Ctrl-C signal (when Guard quit)
     def stop
       if standalone?
-        Runner.stop_passenger
+        Runner.stop_passenger(port)
       else
         true
       end

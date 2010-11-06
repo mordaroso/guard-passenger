@@ -79,7 +79,7 @@ describe Guard::Passenger do
 
     it 'should call `passenger stop\' command if standalone is set' do
       subject.should_receive(:standalone?).and_return(true)
-      Guard::Passenger::Runner.should_receive(:stop_passenger).and_return(true)
+      Guard::Passenger::Runner.should_receive(:stop_passenger).with(3000).and_return(true)
       subject.stop
     end
 
