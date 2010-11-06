@@ -6,8 +6,9 @@ module Guard
   class Passenger < Guard
 
     autoload :Runner, 'guard/passenger/runner'
+    autoload :Toucher, 'guard/passenger/toucher'
 
-    attr_reader :port, :env
+    attr_reader :port, :env, :touch
 
     def standalone?
       @standalone
@@ -22,6 +23,7 @@ module Guard
       @standalone = options[:standalone].nil? ? false : options[:standalone]
       @port = options[:port].nil? ? 3000 : options[:port]
       @env = options[:env].nil? ? 'development' : options[:env]
+      @touch = options[:touch].nil? ? '/' : options[:touch]
     end
 
     # Call once when guard starts
@@ -45,7 +47,7 @@ module Guard
 
     # Call with Ctrl-Z signal
     def reload
-      Runner.restart_passenger
+      Runner.restart_passenger & touch_url
     end
 
     # Call with Ctrl-/ signal
@@ -55,7 +57,16 @@ module Guard
 
     # Call on file(s) modifications
     def run_on_change(paths)
-      Runner.restart_passenger
+      Runner.restart_passenger & touch_url
     end
+
+    private
+      def touch_url
+        if touch
+          Toucher.touch('localhost', port, touch)
+        else
+          true
+        end
+      end
   end
 end
