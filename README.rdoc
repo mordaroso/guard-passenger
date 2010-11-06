@@ -1,8 +1,6 @@
 = Guard::Passenger
 
-Passenger guard allows to automatically & intelligently restart passenger when needed.
-This is particularly useful if you use passenger in development.
-
+Guard::Passenger is the useful development server solution. The guard automatically starts passenger and intelligently restarts the server when needed.
 
 == Install
 
@@ -26,7 +24,7 @@ Please read {guard usage doc}[http://github.com/guard/guard#readme]
 
 == Guardfile
 
-Passenger guard can be really be adapated to all kind of rack project with passenger.
+Passenger guard can be really be adapted to all kind of rack project with passenger.
 Please read {guard doc}[http://github.com/guard/guard#readme] for more info about Guardfile DSL.
 
 === Standard rails app
@@ -50,11 +48,12 @@ By default passenger standalone is deactivated and port is set to 3000.
 
 Guard::Passenger accepts some options for configuration.
 
-    # :standalone    boolean     run passenger standalone  (default: false)
-    # :port          integer     using the given port      (default: 3000)
-    # :env           string      framework environment     (default: development)
+    # :standalone    boolean     run passenger standalone                     (default: true)
+    # :port          integer     using the given port                         (default: 3000)
+    # :env           string      framework environment                        (default: development)
+    # :touch         string      path to check if restart was successful      (default: /)            (false = off)
 
-    guard 'passenger', :standalone => true, :port => 3001, :env => 'production' do
+    guard 'passenger', :standalone => false, :port => 3001, :env => 'production', :touch => '/users/all' do
     end
 
 == Development

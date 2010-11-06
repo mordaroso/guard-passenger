@@ -6,13 +6,13 @@ describe Guard::Passenger do
   describe 'options' do
 
     context 'standalone' do
-      it 'should be false by default' do
-        subject.should_not be_standalone
+      it 'should be true by default' do
+        subject.should be_standalone
       end
 
-      it 'should be set to true' do
-        subject = Guard::Passenger.new([], {:standalone => true})
-        subject.should be_standalone
+      it 'should be set to false' do
+        subject = Guard::Passenger.new([], {:standalone => false})
+        subject.should_not be_standalone
       end
     end
 
@@ -58,26 +58,24 @@ describe Guard::Passenger do
 
   context 'start' do
 
-    it 'should not call `passenger start\' command' do
+    it 'should not call `passenger start\' command if standalone is disabled' do
+      subject.should_receive(:standalone?).and_return(false)
       Guard::RSpec::Runner.should_not_receive(:start_passenger)
       subject.start
     end
 
     it 'should call `passenger start\' command if standalone is set' do
-      subject.should_receive(:standalone?).and_return(true)
       Guard::Passenger::Runner.should_receive(:start_passenger).with(3000, 'development').and_return(true)
       subject.start
     end
 
     it 'should call `passenger start -p 1337\' command if standalone is set and port is set to 1337' do
-      subject.should_receive(:standalone?).and_return(true)
       subject.should_receive(:port).and_return(1337)
       Guard::Passenger::Runner.should_receive(:start_passenger).with(1337, 'development').and_return(true)
       subject.start
     end
 
     it 'should call `passenger start -p 1337\' command if standalone is set, port is set to 1337 and environment is production' do
-      subject.should_receive(:standalone?).and_return(true)
       subject.should_receive(:port).and_return(1337)
       subject.should_receive(:env).and_return('production')
       Guard::Passenger::Runner.should_receive(:start_passenger).with(1337, 'production').and_return(true)
@@ -88,19 +86,18 @@ describe Guard::Passenger do
 
   context 'stop' do
 
-    it 'should not call `passenger stop\' command' do
+    it 'should not call `passenger stop\' command if standalone is disabled' do
+      subject.should_receive(:standalone?).and_return(false)
       Guard::RSpec::Runner.should_not_receive(:stop_passenger)
       subject.stop
     end
 
     it 'should call `passenger stop\' command if standalone is set' do
-      subject.should_receive(:standalone?).and_return(true)
       Guard::Passenger::Runner.should_receive(:stop_passenger).with(3000).and_return(true)
       subject.stop
     end
 
     it 'should call `passenger stop\' command if standalone is set and port is 1337' do
-      subject.should_receive(:standalone?).and_return(true)
       subject.should_receive(:port).and_return(1337)
       Guard::Passenger::Runner.should_receive(:stop_passenger).with(1337).and_return(true)
       subject.stop

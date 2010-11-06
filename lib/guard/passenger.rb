@@ -20,7 +20,7 @@ module Guard
 
     def initialize(watchers = [], options = {})
       super
-      @standalone = options[:standalone].nil? ? false : options[:standalone]
+      @standalone = options[:standalone].nil? ? true : options[:standalone]
       @port = options[:port].nil? ? 3000 : options[:port]
       @env = options[:env].nil? ? 'development' : options[:env]
       @touch = options[:touch].nil? ? '/' : options[:touch]
@@ -47,7 +47,7 @@ module Guard
 
     # Call with Ctrl-Z signal
     def reload
-      Runner.restart_passenger & touch_url
+      restart_and_touch
     end
 
     # Call with Ctrl-/ signal
@@ -57,10 +57,20 @@ module Guard
 
     # Call on file(s) modifications
     def run_on_change(paths)
-      Runner.restart_passenger & touch_url
+      restart_and_touch
     end
 
     private
+      def restart_and_touch
+        if Runner.restart_passenger & touch_url
+          UI.info 'Successfully restarted passenger'
+          true
+        else
+          UI.error 'Restarting passenger failed'
+          false
+        end
+      end
+
       def touch_url
         if touch
           Toucher.touch('localhost', port, touch)

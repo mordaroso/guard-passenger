@@ -4,14 +4,7 @@ module Guard
       class << self
 
         def restart_passenger
-          result = system 'touch tmp/restart.txt'
-          if result
-            UI.info 'Successfully restarted passenger'
-          else
-            UI.error 'Restarting passenger failed'
-          end
-
-          result
+           system 'touch tmp/restart.txt'
         end
 
         def start_passenger(port, environment)
