@@ -12,7 +12,7 @@ module Guard
             Net::HTTP.start(host, port) do |http|
               response = http.head(path)
             end
-            response['status'].to_i != 500
+            (response['status'].to_s =~ /5[\d]{2}/).nil?
           rescue
             false
           end
