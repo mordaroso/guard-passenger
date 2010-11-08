@@ -1,0 +1,6 @@
+== 0.1.0 (Nov 06, 2010)
+
+Features:
+
+- Add touching
+- Activate passenger standalone by default

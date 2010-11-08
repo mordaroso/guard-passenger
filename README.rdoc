@@ -36,13 +36,12 @@ Please read {guard doc}[http://github.com/guard/guard#readme] for more info abou
 
 === Passenger standalone
 
-To use passenger standalone you can pass options to the guard. Guard::Passenger will start passenger on startup and take it down on exit.
-By default passenger standalone is deactivated and port is set to 3000.
+Passenger standalone is used as default. You can pass options to the guard to disable or configure it. Guard::Passenger will start passenger on startup and take it down on exit.
+By default passenger standalone is activated and port is set to 3000.
 
-    guard 'passenger', :standalone => true, :port => 3001 do
-      watch('lib/.*\.rb')
-      watch('config/.*\.rb')
-    end
+=== Touching
+
+If touching is enabled Guard::Passenger will open the given path. By default it requests http://localhost:3000/ and checks if the http status is alright.
 
 === Guard options
 
