@@ -18,39 +18,39 @@ describe Guard::Passenger do
 
     context 'port' do
       it 'should be 3000 by default' do
-        subject.port.should be 3000
+        subject.port.should == 3000
       end
 
       it 'should be set to 1337' do
         subject = Guard::Passenger.new([], {:port => 1337})
-        subject.port.should be 1337
+        subject.port.should == 1337
       end
     end
 
     context 'env' do
       it 'should be development by default' do
-        subject.env.should eql 'development'
+        subject.env.should == 'development'
       end
 
       it 'should be set to production' do
         subject = Guard::Passenger.new([], {:env => 'production'})
-        subject.env.should eql 'production'
+        subject.env.should == 'production'
       end
     end
 
     context 'touch' do
       it 'should touch / by default' do
-        subject.touch.should eql '/'
+        subject.touch.should == '/'
       end
 
       it 'should touch /users/all' do
         subject = Guard::Passenger.new([], {:touch => '/users/all'})
-        subject.touch.should eql '/users/all'
+        subject.touch.should == '/users/all'
       end
 
       it 'should disable touch' do
         subject = Guard::Passenger.new([], {:touch => false})
-        subject.touch.should be false
+        subject.touch.should be_false
       end
     end
 
@@ -60,7 +60,7 @@ describe Guard::Passenger do
 
     it 'should not call `passenger start\' command if standalone is disabled' do
       subject.should_receive(:standalone?).and_return(false)
-      Guard::RSpec::Runner.should_not_receive(:start_passenger)
+      Guard::Passenger::Runner.should_not_receive(:start_passenger)
       subject.start
     end
 
@@ -88,7 +88,7 @@ describe Guard::Passenger do
 
     it 'should not call `passenger stop\' command if standalone is disabled' do
       subject.should_receive(:standalone?).and_return(false)
-      Guard::RSpec::Runner.should_not_receive(:stop_passenger)
+      Guard::Passenger::Runner.should_not_receive(:stop_passenger)
       subject.stop
     end
 

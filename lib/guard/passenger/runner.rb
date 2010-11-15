@@ -11,7 +11,7 @@ module Guard
           if passenger_standalone_installed?
             result = system "passenger start -p #{port} -d -e #{environment}"
             if result
-              UI.info "Passenger standalone startet at port #{port}"
+              UI.info "Passenger standalone started at port #{port}"
             else
               UI.error "Passenger standalone failed to start at port #{port}"
             end
