@@ -23,7 +23,7 @@ module Guard
       @standalone = options[:standalone].nil? ? true : options[:standalone]
       @port       = options[:port] || 3000
       @env        = options[:env] || 'development'
-      @ping       = options[:ping].nil? ? false : !!options[:ping]
+      @ping       = options[:ping].nil? ? false : (options[:ping] == true ? '/' : options[:ping])
     end
     
     # Call once when guard starts
@@ -53,7 +53,7 @@ module Guard
     def restart_and_ping
       UI.info 'Restarting Passenger...'
       restarted = Runner.restart_passenger
-      Pinger.ping('localhost', port) if ping
+      Pinger.ping('localhost', port, ping) if ping
       restarted
     end
     

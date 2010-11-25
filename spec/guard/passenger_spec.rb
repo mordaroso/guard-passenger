@@ -48,12 +48,12 @@ describe Guard::Passenger do
       
       it 'should be true if set to true' do
         subject = Guard::Passenger.new([], { :ping => true })
-        subject.ping.should be_true
+        subject.ping.should == '/'
       end
       
       it 'should be true if set to "foo"' do
         subject = Guard::Passenger.new([], { :ping => 'foo' })
-        subject.ping.should be_true
+        subject.ping.should == 'foo'
       end
     end
   end
@@ -131,7 +131,7 @@ describe Guard::Passenger do
       
       it 'should ping localhost:3000/ if ping is set to true' do
         subject = Guard::Passenger.new([], { :ping => true })
-        Guard::Passenger::Pinger.should_receive(:ping).with('localhost', 3000)
+        Guard::Passenger::Pinger.should_receive(:ping).with('localhost', 3000, '/')
         subject.send(method)
       end
     end
