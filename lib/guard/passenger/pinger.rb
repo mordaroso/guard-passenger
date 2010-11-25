@@ -16,9 +16,9 @@ module Guard
                 http.head(path)
               end
               if response =~ Net::HTTPServerError
-                Notifier.notify "Passenger is not running!", :title => "Passenger", :image => :failed
+                Notifier.notify("Passenger is not running!", :title => "Passenger", :image => :failed)
               else
-                Notifier.notify "Passenger is running.", :title => "Passenger", :image => :success
+                Notifier.notify("Passenger is running.", :title => "Passenger", :image => :success)
               end
             rescue
               # do nothing

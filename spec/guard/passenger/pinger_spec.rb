@@ -6,6 +6,9 @@ describe Guard::Passenger::Pinger do
     before(:each) do
       Net::HTTP.should_receive(:start).with('localhost', 3000).and_yield(@http_object = mock('request'))
     end
+    after(:each) do
+      wait_for_thread_end
+    end
     
     describe "default" do
       before(:each) do
@@ -15,24 +18,21 @@ describe Guard::Passenger::Pinger do
       it "should ping '/'" do
         @http_response.should_receive(:=~).with(Net::HTTPServerError).and_return(false)
         subject.ping('localhost', 3000)
-        wait_for_thread_end
       end
       
       context "successful ping" do
-        it 'should display an info message' do
+        it 'should notify the problem' do
           @http_response.should_receive(:=~).with(Net::HTTPServerError).and_return(false)
-          Guard::Notifier.should_receive(:notify).with('Passenger is not running!', :title => "Passenger", :image => :failed)
+          Guard::Notifier.should_receive(:notify).with('Passenger is running.', :title => "Passenger", :image => :success)
           subject.ping('localhost', 3000)
-          wait_for_thread_end
         end
       end
       
       context "failing ping" do
-        it 'should display an error message' do
+        it 'should notify that it is ok' do
           @http_response.should_receive(:=~).with(Net::HTTPServerError).and_return(true)
-          Guard::Notifier.should_receive(:notify).with('Passenger is running.', :title => "Passenger", :image => :success)
+          Guard::Notifier.should_receive(:notify).with('Passenger is not running!', :title => "Passenger", :image => :failed)
           subject.ping('localhost', 3000)
-          wait_for_thread_end
         end
       end
     end
@@ -47,7 +47,6 @@ describe Guard::Passenger::Pinger do
         context "successful ping" do
           it 'should display an info message' do
             subject.ping('localhost', 3000, 'foo')
-            wait_for_thread_end
           end
         end
       end
@@ -61,7 +60,6 @@ describe Guard::Passenger::Pinger do
         context "successful ping" do
           it 'should display an info message' do
             subject.ping('localhost', 3000, '/foo')
-            wait_for_thread_end
           end
         end
       end
