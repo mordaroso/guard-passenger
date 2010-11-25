@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ['mordaroso@gmail.com']
   s.homepage    = 'http://rubygems.org/gems/guard-passenger'
   s.summary     = 'Guard gem for Passenger'
-  s.description = 'Guard::Passenger automatically restarts passenger when needed'
+  s.description = 'Guard::Passenger automatically restarts Passenger when needed.'
   
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'guard-passenger'

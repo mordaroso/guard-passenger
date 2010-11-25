@@ -1,12 +1,12 @@
-== 0.2.9 (Nov, 21, 2010)
+== https://github.com/guard/guard-passenger/tree/refactoring, Nov 25, 2010 [by rymai]
 
 Changes:
   - Renamed Toucher to Pinger (it was confusing with the "touch" command used to restart Passenger)
-  - Renamed :touch option to :ping, can only be true or false (false by default)
-  - Ping localhost in a new thread in order not to block other guards execution, only display information/error message on the current state of localhost
+  - Renamed :touch option to :ping, and set it to false by default
+  - Ping localhost in a new thread in order not to block other guards execution, notify of the ping's result
   
 == 0.1.0 (Nov 06, 2010)
 
 Features:
   - Add touching
-  - Activate passenger standalone by default
+  - Activate Passenger standalone by default

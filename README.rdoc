@@ -1,6 +1,6 @@
 = Guard::Passenger
 
-Guard::Passenger is the useful development server solution. The guard automatically starts passenger and intelligently restarts the server when needed.
+Guard::Passenger is the useful development server solution. The guard automatically starts Passenger and intelligently restarts the server when needed.
 
 == Install
 
@@ -24,7 +24,7 @@ Please read {guard usage doc}[http://github.com/guard/guard#readme]
 
 == Guardfile
 
-Passenger guard can be really be adapted to all kind of rack project with passenger.
+Passenger guard can be really be adapted to all kind of rack project with Passenger.
 Please read {guard doc}[http://github.com/guard/guard#readme] for more info about Guardfile DSL.
 
 === Standard rails app
@@ -36,24 +36,24 @@ Please read {guard doc}[http://github.com/guard/guard#readme] for more info abou
 
 === Passenger standalone
 
-Passenger standalone is used as default. You can pass options to the guard to disable or configure it. Guard::Passenger will start passenger on startup and take it down on exit.
-By default passenger standalone is activated and port is set to 3000.
+Passenger standalone is used as default. You can pass options to the guard to disable or configure it. Guard::Passenger will start Passenger on startup and take it down on exit.
+By default Passenger standalone is activated and port is set to 3000.
 
 === Ping
 
-You can choose to ping localhost:port(/path) after Passenger has been restarted, it's done asynchronously so it won't block other guards execution.
-If localhost:port(/path) respond with a non-5XX response, Passenger is considered as running, otherwise, there is probably a problem with Passenger.
+You can choose to ping localhost:port(/path) after Passenger has been restarted, it's done asynchronously so it won't block other guards execution. If you set :ping to true, it will ping localhost:3000/, it you set :ping to a String, it will append the path to localhost:3000/ for the ping.
+If the ping responds with a non-5XX response, Passenger is considered as running, otherwise, there is probably a problem with Passenger.
 
 === Guard options
 
 Guard::Passenger accepts some options for configuration.
 
-    # :standalone    boolean            run passenger standalone                            (default: true)
-    # :port          integer            using the given port                                (default: 3000)
-    # :env           string             framework environment                               (default: development)
-    # :ping          boolean or string  ping localhost:port(/ping) after Passenger restart  (default: false)
+    # :standalone    boolean            run Passenger standalone                (default: true)
+    # :port          integer            using the given port                    (default: 3000)
+    # :env           string             framework environment                   (default: development)
+    # :ping          boolean or string  ping localhost after Passenger restart  (default: false)
 
-    guard 'passenger', :standalone => false, :port => 3001, :env => 'production', :ping => 'foo' do
+    guard 'passenger', :standalone => false, :port => 3001, :env => 'production', :ping => '/foo' do
     end
 
 == Development
