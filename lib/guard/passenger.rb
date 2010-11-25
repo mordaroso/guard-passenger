@@ -23,7 +23,13 @@ module Guard
       @standalone = options[:standalone].nil? ? true : options[:standalone]
       @port       = options[:port] || 3000
       @env        = options[:env] || 'development'
-      @ping       = options[:ping].eql?(true) ? '/' : options[:ping]
+      ping_opt = unless options[:touch].nil?
+        UI.info "Warning: The :touch option has been replaced by the :ping option, usage is still the same."
+        options[:touch]
+      else
+        options[:ping]
+      end
+      @ping = ping_opt.eql?(true) ? '/' : ping_opt
     end
     
     # Call once when guard starts

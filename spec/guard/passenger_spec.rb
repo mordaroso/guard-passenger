@@ -44,6 +44,13 @@ describe Guard::Passenger do
       end
     end
     
+    describe 'touch' do
+      it "should display a message when passing the former :touch option" do
+        Guard::UI.should_receive(:info).with("Warning: The :touch option has been replaced by the :ping option, usage is still the same.")
+        Guard::Passenger.new([], { :touch => false })
+      end
+    end
+    
     describe 'ping' do
       it 'should be false by default' do
         subject = Guard::Passenger.new([])
