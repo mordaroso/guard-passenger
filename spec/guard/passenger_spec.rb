@@ -5,10 +5,16 @@ describe Guard::Passenger do
   describe 'options' do
     describe 'standalone' do
       it 'should be true by default' do
+        subject = Guard::Passenger.new([])
         subject.should be_standalone
       end
       
-      it 'should be set to false' do
+      it 'should be true if set to true' do
+        subject = Guard::Passenger.new([], { :standalone => true })
+        subject.should be_standalone
+      end
+      
+      it 'should be false if set so' do
         subject = Guard::Passenger.new([], { :standalone => false })
         subject.should_not be_standalone
       end
@@ -16,6 +22,7 @@ describe Guard::Passenger do
     
     describe 'port' do
       it 'should be 3000 by default' do
+        subject = Guard::Passenger.new([])
         subject.port.should == 3000
       end
       
@@ -27,6 +34,7 @@ describe Guard::Passenger do
     
     describe 'env' do
       it 'should be development by default' do
+        subject = Guard::Passenger.new([])
         subject.env.should == 'development'
       end
       
@@ -38,6 +46,7 @@ describe Guard::Passenger do
     
     describe 'ping' do
       it 'should be false by default' do
+        subject = Guard::Passenger.new([])
         subject.ping.should be_false
       end
       
@@ -46,7 +55,7 @@ describe Guard::Passenger do
         subject.ping.should be_false
       end
       
-      it 'should be true if set to true' do
+      it 'should be true if set so' do
         subject = Guard::Passenger.new([], { :ping => true })
         subject.ping.should == '/'
       end

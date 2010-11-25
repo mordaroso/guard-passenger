@@ -23,7 +23,7 @@ module Guard
       @standalone = options[:standalone].nil? ? true : options[:standalone]
       @port       = options[:port] || 3000
       @env        = options[:env] || 'development'
-      @ping       = options[:ping].nil? ? false : (options[:ping] == true ? '/' : options[:ping])
+      @ping       = options[:ping].eql?(true) ? '/' : options[:ping]
     end
     
     # Call once when guard starts
