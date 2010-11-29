@@ -4,79 +4,64 @@ require 'rubygems'
 
 module Guard
   class Passenger < Guard
-
+    
     autoload :Runner, 'guard/passenger/runner'
-    autoload :Toucher, 'guard/passenger/toucher'
-
-    attr_reader :port, :env, :touch
-
+    autoload :Pinger, 'guard/passenger/pinger'
+    
+    attr_reader :port, :env, :ping
+    
     def standalone?
       @standalone
     end
-
-    # ================
-    # = Guard method =
-    # ================
-
+    
+    # =================
+    # = Guard methods =
+    # =================
+    
     def initialize(watchers = [], options = {})
       super
       @standalone = options[:standalone].nil? ? true : options[:standalone]
-      @port = options[:port].nil? ? 3000 : options[:port]
-      @env = options[:env].nil? ? 'development' : options[:env]
-      @touch = options[:touch].nil? ? '/' : options[:touch]
+      @port       = options[:port] || 3000
+      @env        = options[:env] || 'development'
+      ping_opt = unless options[:touch].nil?
+        UI.info "Warning: The :touch option has been replaced by the :ping option, usage is still the same."
+        options[:touch]
+      else
+        options[:ping]
+      end
+      @ping = ping_opt.eql?(true) ? '/' : ping_opt
     end
-
+    
     # Call once when guard starts
     def start
-      UI.info "Guard::Passenger is guarding your changes!"
-      if standalone?
-        Runner.start_passenger(port, env)
-      else
-        true
-      end
+      UI.info 'Guard::Passenger is running!'
+      standalone? ? Runner.start_passenger(port, env) : true
     end
-
+    
     # Call with Ctrl-C signal (when Guard quit)
     def stop
-      if standalone?
-        Runner.stop_passenger(port)
-      else
-        true
-      end
+      UI.info 'Stopping Passenger...'
+      standalone? ? Runner.stop_passenger(port) : true
     end
-
+    
     # Call with Ctrl-Z signal
     def reload
-      restart_and_touch
+      restart_and_ping
     end
-
-    # Call with Ctrl-/ signal
-    def run_all
-      true
-    end
-
+    
     # Call on file(s) modifications
-    def run_on_change(paths)
-      restart_and_touch
+    def run_on_change(paths = {})
+      restart_and_ping
     end
-
+    
     private
-      def restart_and_touch
-        if Runner.restart_passenger & touch_url
-          UI.info 'Successfully restarted passenger'
-          true
-        else
-          UI.error 'Restarting passenger failed'
-          false
-        end
-      end
-
-      def touch_url
-        if touch
-          Toucher.touch('localhost', port, touch)
-        else
-          true
-        end
-      end
+    
+    def restart_and_ping
+      UI.info 'Restarting Passenger...'
+      restarted = Runner.restart_passenger
+      Pinger.ping('localhost', port, ping) if ping
+      restarted
+    end
+    
   end
 end
