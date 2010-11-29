@@ -4,7 +4,7 @@ module Guard
   class Passenger
     module Pinger
       class << self
-        
+
         # try to ping given url (e.g. http://localhost:3000/) and display a message to inform of the result
         # failure == response status is 5xx
         # otherwise, it's a success
@@ -15,7 +15,7 @@ module Guard
               response = Net::HTTP.start(host, port) do |http|
                 http.head(path)
               end
-              if response =~ Net::HTTPServerError
+              if response.is_a? Net::HTTPServerError
                 Notifier.notify("Passenger is not running!", :title => "Passenger", :image => :failed)
               else
                 Notifier.notify("Passenger is running.", :title => "Passenger", :image => :success)
@@ -25,7 +25,7 @@ module Guard
             end
           }
         end
-        
+
       end
     end
   end
