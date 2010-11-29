@@ -11,17 +11,17 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://rubygems.org/gems/guard-passenger'
   s.summary     = 'Guard gem for Passenger'
   s.description = 'Guard::Passenger automatically restarts Passenger when needed.'
-  
+
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'guard-passenger'
-  
-  s.add_dependency 'guard', '>= 0.2.1'
-  
+
+  s.add_dependency 'guard', '~> 0.2.1'
+
   s.add_development_dependency 'bundler',       '~> 1.0.7'
-  s.add_development_dependency 'rspec',         '~> 2.1.0'
+  s.add_development_dependency 'rspec',         '~> 2.2.0'
   s.add_development_dependency 'guard-rspec',   '~> 0.1.8'
   s.add_development_dependency 'guard-bundler', '~> 0.1.1'
-  
+
   s.files = Dir.glob('{lib}/**/*') + %w[LICENSE README.rdoc]
   s.require_path = 'lib'
 end
