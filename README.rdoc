@@ -65,4 +65,7 @@ Pull requests are very welcome! Make sure your patches are well tested. Please c
 
 == Authors
 
-{Fabio Kuhn}[http://github.com/mordaroso]
+{Fabio Kuhn}[https://github.com/mordaroso]
+
+{Contributors}[https://github.com/mordaroso/guard-passenger/contributors]
+{Forks}[https://github.com/mordaroso/guard-passenger/network/members]
