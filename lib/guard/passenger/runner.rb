@@ -2,24 +2,24 @@ module Guard
   class Passenger
     module Runner
       class << self
-        
+
         def restart_passenger
-           succeed = system("touch tmp/restart.txt")
-           if succeed
-             UI.info "Passenger successfully restarted."
-           else
-             UI.error "Passenger failed to restart!"
-           end
-           succeed
+          succeed = system("touch tmp/restart.txt")
+          if succeed
+            UI.info "Passenger successfully restarted."
+          else
+            UI.error "Passenger failed to restart!"
+          end
+          succeed
         end
-        
-        def start_passenger(port, environment)
+
+        def start_passenger(cli)
           if passenger_standalone_installed?
-            succeed = system("passenger start -p #{port} -d -e #{environment}")
+            succeed = system("passenger start #{cli}")
             if succeed
-              UI.info "Passenger standalone (port #{port}) started."
+              UI.info "Passenger standalone started."
             else
-              UI.error "Passenger standalone (port #{port}) failed to start!"
+              UI.error "Passenger standalone failed to start!"
             end
             succeed
           else
@@ -27,17 +27,17 @@ module Guard
             false
           end
         end
-        
-        def stop_passenger(port)
-          succeed = system("passenger stop -p #{port}")
+
+        def stop_passenger(cli)
+          succeed = system("passenger stop #{cli}")
           if succeed
-            UI.info "Passenger standalone (port #{port}) stopped."
+            UI.info "Passenger standalone stopped."
           else
-            UI.error "Passenger standalone (port #{port}) failed to stop!"
+            UI.error "Passenger standalone failed to stop!"
           end
           succeed
         end
-        
+
         def passenger_standalone_installed?
           begin
             gem "passenger", ">=3.0.0"
@@ -46,7 +46,7 @@ module Guard
           end
           true
         end
-        
+
       end
     end
   end

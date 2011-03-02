@@ -1,4 +1,14 @@
-== 0.2.1, (Nov 25, 2010) [by rymai]
+== 0.3.0, (Mar 2, 2011)
+
+Features:
+  - New <tt>:cli</tt> option for passing Passenger CLI option to the runner.
+  - Deprecation of <tt>:port</tt>, <tt>:environment</tt> options.
+  - New <tt>:notification</tt> option (to disable Growl/Libnotify notifications).
+
+Fixes:
+  - Shut down guard if passenger failed to stop (prevents "locked in guard" syndrome when passenger is not running)
+
+== 0.2.1, (Jan 19, 2010)
 
 Changes:
   - Change dependency to guard that the new version is loaded

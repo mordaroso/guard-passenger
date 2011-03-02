@@ -49,11 +49,11 @@ If the ping responds with a non-5XX response, Passenger is considered as running
 Guard::Passenger accepts some options for configuration.
 
     # :standalone    boolean            run Passenger standalone                (default: true)
-    # :port          integer            using the given port                    (default: 3000)
-    # :env           string             framework environment                   (default: development)
+    # :cli           string             options to pass to passenger command    (default: '--daemonize')
+    # :notification  boolean            Notifications enabled                   (default: true)
     # :ping          boolean or string  ping localhost after Passenger restart  (default: false)
 
-    guard 'passenger', :standalone => false, :port => 3001, :env => 'production', :ping => '/foo' do
+    guard 'passenger', :standalone => false, :cli => '--daemonize --port 3001 --address my_app.local --environment production', :ping => '/foo' do
     end
 
 == Development

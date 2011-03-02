@@ -4,8 +4,9 @@ describe Guard::Passenger::Pinger do
 
   describe '.ping' do
     before(:each) do
-      Net::HTTP.should_receive(:start).with('localhost', 3000).and_yield(@http_object = mock('request'))
+      Net::HTTP.should_receive(:start).any_number_of_times.and_yield(@http_object = mock('request'))
     end
+
     after(:each) do
       wait_for_thread_end
     end
@@ -17,14 +18,21 @@ describe Guard::Passenger::Pinger do
 
       it "should ping '/'" do
         @http_response.should_receive(:is_a?).with(Net::HTTPServerError).and_return(false)
-        subject.ping('localhost', 3000)
+        subject.ping('0.0.0.0', '3000', true)
       end
 
       context "successful ping" do
         it 'should notify the problem' do
           @http_response.should_receive(:is_a?).with(Net::HTTPServerError).and_return(false)
           Guard::Notifier.should_receive(:notify).with('Passenger is running.', :title => "Passenger", :image => :success)
-          subject.ping('localhost', 3000)
+          subject.ping('0.0.0.0', '3000', true)
+        end
+
+        context "successful ping without notification" do
+          it 'should notify the problem' do
+            Guard::Notifier.should_not_receive(:notify)
+            subject.ping('0.0.0.0', '3000', false)
+          end
         end
       end
 
@@ -32,7 +40,14 @@ describe Guard::Passenger::Pinger do
         it 'should notify that it is ok' do
           @http_response.should_receive(:is_a?).with(Net::HTTPServerError).and_return(true)
           Guard::Notifier.should_receive(:notify).with('Passenger is not running!', :title => "Passenger", :image => :failed)
-          subject.ping('localhost', 3000)
+          subject.ping('0.0.0.0', '3000', true)
+        end
+      end
+
+      context "failing ping without notification" do
+        it 'should notify that it is ok' do
+          Guard::Notifier.should_not_receive(:notify)
+          subject.ping('0.0.0.0', '3000', false)
         end
       end
     end
@@ -46,7 +61,7 @@ describe Guard::Passenger::Pinger do
 
         context "successful ping" do
           it 'should display an info message' do
-            subject.ping('localhost', 3000, 'foo')
+            subject.ping('0.0.0.0', '3000', true, 'foo')
           end
         end
       end
@@ -59,7 +74,7 @@ describe Guard::Passenger::Pinger do
 
         context "successful ping" do
           it 'should display an info message' do
-            subject.ping('localhost', 3000, '/foo')
+            subject.ping('0.0.0.0', '3000', true, '/foo')
           end
         end
       end
