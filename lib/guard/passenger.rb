@@ -44,8 +44,10 @@ module Guard
 
     # Call with Ctrl-C signal (when Guard quit)
     def stop
-      UI.info 'Stopping Passenger...'
-      Runner.stop_passenger(cli_stop) if standalone?
+      if standalone?
+        UI.info 'Stopping Passenger...'
+        Runner.stop_passenger(cli_stop)
+      end
       true
     end
 
