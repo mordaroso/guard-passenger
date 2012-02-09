@@ -1,5 +1,7 @@
 = Guard::Passenger
 
+{<img src="https://secure.travis-ci.org/mordaroso/guard-passenger.png" />}[http://travis-ci.org/mordaroso/guard-passenger]
+
 Guard::Passenger is the useful development server solution. The guard automatically starts Passenger and intelligently restarts the server when needed.
 
 == Install
