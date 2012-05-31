@@ -209,7 +209,7 @@ describe Guard::Passenger do
     end
   end
 
-  %w[reload run_on_change].each do |method|
+  %w[reload run_on_changes].each do |method|
     describe "##{method}" do
       before(:each) do
         Guard::Passenger::Runner.stub(:restart_passenger)

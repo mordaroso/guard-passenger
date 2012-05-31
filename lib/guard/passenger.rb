@@ -60,7 +60,7 @@ module Guard
     end
 
     # Call on file(s) modifications
-    def run_on_change(paths = {})
+    def run_on_changes(paths = {})
       restart_and_ping
     end
 

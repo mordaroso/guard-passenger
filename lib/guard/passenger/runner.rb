@@ -9,6 +9,7 @@ module Guard
             UI.info "Passenger successfully restarted."
           else
             UI.error "Passenger failed to restart!"
+            throw :task_has_failed
           end
           succeed
         end
@@ -20,10 +21,12 @@ module Guard
               UI.info "Passenger standalone started."
             else
               UI.error "Passenger standalone failed to start!"
+              throw :task_has_failed
             end
             succeed
           else
             UI.error "Passenger standalone is not installed. You need at least Passenger version >= 3.0.0.\nPlease run 'gem install passenger' or add it to your Gemfile."
+            throw :task_has_failed
             false
           end
         end
@@ -34,6 +37,7 @@ module Guard
             UI.info "Passenger standalone stopped."
           else
             UI.error "Passenger standalone failed to stop!"
+            throw :task_has_failed
           end
           succeed
         end

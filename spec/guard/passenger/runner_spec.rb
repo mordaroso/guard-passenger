@@ -35,7 +35,9 @@ describe Guard::Passenger::Runner do
       it 'should fail to start passenger in development environment on the port 1' do
         subject.should_receive(:system).with('passenger start --port 1 --daemonize').and_return(false)
         Guard::UI.should_receive(:error).with("Passenger standalone failed to start!")
-        quietly { subject.start_passenger('--port 1 --daemonize').should be_false }
+        expect {
+          quietly { subject.start_passenger('--port 1 --daemonize').should be_false }
+        }.to throw_symbol(:task_has_failed)
       end
     end
 
@@ -47,7 +49,9 @@ describe Guard::Passenger::Runner do
       it 'should fail to start passenger' do
         subject.should_not_receive(:system).with('passenger start --daemonize')
         Guard::UI.should_receive(:error).with("Passenger standalone is not installed. You need at least Passenger version >= 3.0.0.\nPlease run 'gem install passenger' or add it to your Gemfile.")
-        quietly { subject.start_passenger('--daemonize').should be_false }
+        expect {
+          quietly { subject.start_passenger('--daemonize').should be_false }
+        }.to throw_symbol(:task_has_failed)
       end
     end
   end
@@ -89,14 +93,18 @@ describe Guard::Passenger::Runner do
     it 'should display error message if stop fails' do
       subject.should_receive(:system).with('passenger stop').and_return(false)
       Guard::UI.should_receive(:error).with("Passenger standalone failed to stop!")
-      subject.stop_passenger('')
+      expect {
+        subject.stop_passenger('')
+      }.to throw_symbol(:task_has_failed)
     end
   end
 
   describe '#restart_passenger' do
     it 'should call "touch tmp/restart.txt"' do
       subject.should_receive(:system).with('touch tmp/restart.txt')
-      quietly { subject.restart_passenger }
+      expect {
+        quietly { subject.restart_passenger }
+      }.to throw_symbol(:task_has_failed)
     end
 
     context "restart succeed" do
@@ -117,11 +125,15 @@ describe Guard::Passenger::Runner do
 
       it 'should display a message' do
         Guard::UI.should_receive(:error).with("Passenger failed to restart!")
-        quietly { subject.restart_passenger }
+        expect {
+          quietly { subject.restart_passenger }
+        }.to throw_symbol(:task_has_failed)
       end
 
       it 'should return false if restart fails' do
-        quietly { subject.restart_passenger.should be_false }
+        expect {
+          quietly { subject.restart_passenger.should be_false }
+        }.to throw_symbol(:task_has_failed)
       end
     end
   end
