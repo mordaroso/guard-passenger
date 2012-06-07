@@ -2,6 +2,9 @@
 
 Changes:
   - Updated to guard version 1.1 (throw :task_has_failed error and run_on_changes)
+  - Remove depricated funcitonality of <tt>:ping</tt>, <tt>:port</tt> and <tt>:env</tt>
+Fixes:
+  - Don't try to stop passenger standalone when it wasn't started properly
 
 == 0.4.0, (Feb 9, 2012)
 

@@ -20,40 +20,6 @@ describe Guard::Passenger do
       end
     end
 
-    #DEPRICATED
-    describe 'port' do
-      it 'should not be set by default' do
-        subject = Guard::Passenger.new([])
-        subject.cli_start.should_not =~ /(?:-p|--port)/
-      end
-
-      it 'should be set to 1337' do
-        subject = Guard::Passenger.new([], { :port => 1337 })
-        subject.cli_start.should =~ /(?:-p|--port) 1337/
-      end
-    end
-
-    #DEPRICATED
-    describe 'env' do
-      it 'should not be set by default' do
-        subject = Guard::Passenger.new([])
-        subject.cli_start.should_not =~ /(?:-e|--environment)/
-      end
-
-      it 'should be set to production' do
-        subject = Guard::Passenger.new([], { :env => 'production' })
-        subject.cli_start.should =~ /(?:-e|--environment) production/
-      end
-    end
-
-    #DEPRICATED
-    describe 'touch' do
-      it "should display a message when passing the former :touch option" do
-        Guard::UI.should_receive(:info).with("Warning: The :touch option has been replaced by the :ping option, usage is still the same.")
-        Guard::Passenger.new([], { :touch => false })
-      end
-    end
-
     describe 'ping' do
       it 'should be false by default' do
         subject = Guard::Passenger.new([])
@@ -178,6 +144,10 @@ describe Guard::Passenger do
   end
 
   describe '#stop' do
+    before do
+      subject.stub(:running?).and_return(true)
+    end
+
     it 'should not call `passenger stop\' command if standalone is disabled' do
       subject.should_receive(:standalone?).and_return(false)
       Guard::Passenger::Runner.should_not_receive(:stop_passenger)
@@ -186,6 +156,12 @@ describe Guard::Passenger do
 
     it 'should call `passenger stop\' command if standalone is set' do
       Guard::Passenger::Runner.should_receive(:stop_passenger).and_return(true)
+      subject.stop
+    end
+
+    it 'should not call `passenger stop\' command if standalone is set but it not running' do
+      subject.should_receive(:running?).and_return(false)
+      Guard::Passenger::Runner.should_not_receive(:stop_passenger)
       subject.stop
     end
 
@@ -202,7 +178,7 @@ describe Guard::Passenger do
     end
 
     it 'should call `rvmsudo passenger stop` command if standalone is set and sudo is set to "rvmsudo"' do
-      subject = Guard::Passenger.new([], { :sudo => 'rvmsudo' })
+      subject.instance_variable_set('@sudo', 'rvmsudo')
       subject.should_receive(:cli_stop).and_return('--pid-file "/usr/passenger.pid"')
       Guard::Passenger::Runner.should_receive(:stop_passenger).with('--pid-file "/usr/passenger.pid"', 'rvmsudo').and_return(true)
       subject.stop
