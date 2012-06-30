@@ -112,27 +112,35 @@ describe Guard::Passenger do
   end
 
   describe '#start' do
+    before(:each) do
+      subject.should_not be_running
+    end
+
     it 'should not call `passenger start\' command if standalone is disabled' do
       subject.should_receive(:standalone?).and_return(false)
       Guard::Passenger::Runner.should_not_receive(:start_passenger)
       subject.start
+      subject.should_not be_running
     end
 
     it 'should call `passenger start\' command if standalone is set' do
       Guard::Passenger::Runner.should_receive(:start_passenger).with('--daemonize', '').and_return(true)
       subject.start
+      subject.should be_running
     end
 
     it 'should call `passenger start -p 1337\' command if standalone is set and port is set to 1337' do
       subject.should_receive(:cli_start).and_return('--daemonize --port 1337')
       Guard::Passenger::Runner.should_receive(:start_passenger).with('--daemonize --port 1337', '').and_return(true)
       subject.start
+      subject.should be_running
     end
 
     it 'should call `passenger start -p 1337\' command if standalone is set, port is set to 1337 and environment is production' do
       subject.should_receive(:cli_start).and_return('--daemonize --port 1337 --environment production')
       Guard::Passenger::Runner.should_receive(:start_passenger).with('--daemonize --port 1337 --environment production', '').and_return(true)
       subject.start
+      subject.should be_running
     end
 
     it 'should call `rvmsudo passenger start -p 80` command if sudo is set to "rvmsudo" and port is set to 80' do
@@ -140,6 +148,7 @@ describe Guard::Passenger do
       subject.should_receive(:cli_start).and_return('--daemonize --port 80')
       Guard::Passenger::Runner.should_receive(:start_passenger).with('--daemonize --port 80', 'rvmsudo').and_return(true)
       subject.start
+      subject.should be_running
     end
   end
 
