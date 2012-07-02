@@ -1,3 +1,10 @@
+== 0.5.1, (Jul 2, 2012)
+
+Changes:
+  - Updated development gem dependencies
+Fixes:
+  - Correctly stop passenger when running as standalone [by dt309]
+
 == 0.5.0, (May 31, 2012)
 
 Changes:
