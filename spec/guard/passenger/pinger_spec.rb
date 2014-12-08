@@ -4,7 +4,7 @@ describe Guard::Passenger::Pinger do
 
   describe '.ping' do
     before(:each) do
-      Net::HTTP.should_receive(:start).any_number_of_times.and_yield(@http_object = mock('request'))
+      Net::HTTP.should_receive(:start).at_least(1).times.and_yield(@http_object = double('request'))
     end
 
     after(:each) do
@@ -13,7 +13,7 @@ describe Guard::Passenger::Pinger do
 
     describe "default" do
       before(:each) do
-        @http_object.should_receive(:head).with('/').and_return(@http_response = mock('response'))
+        @http_object.should_receive(:head).with('/').and_return(@http_response = double('response'))
       end
 
       it "should ping '/'" do
@@ -55,7 +55,7 @@ describe Guard::Passenger::Pinger do
     describe "custom path" do
       context "not beginning with '/'" do
         before(:each) do
-          @http_object.should_receive(:head).with('/foo').and_return(@http_response = mock('response'))
+          @http_object.should_receive(:head).with('/foo').and_return(@http_response = double('response'))
           @http_response.should_receive(:is_a?).with(Net::HTTPServerError)
         end
 
@@ -68,7 +68,7 @@ describe Guard::Passenger::Pinger do
 
       context "not beginning with '/'" do
         before(:each) do
-          @http_object.should_receive(:head).with('/foo').and_return(@http_response = mock('response'))
+          @http_object.should_receive(:head).with('/foo').and_return(@http_response = double('response'))
           @http_response.should_receive(:is_a?).with(Net::HTTPServerError)
         end
 
