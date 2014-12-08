@@ -11,32 +11,32 @@ describe Guard::Passenger::Runner do
       it 'should start passenger in development environment on the port 3000' do
         subject.should_receive(:system).with('passenger start --daemonize').and_return(true)
         Guard::UI.should_receive(:info).with("Passenger standalone started.")
-        subject.start_passenger('--daemonize').should be_true
+        subject.start_passenger('--daemonize').should be true
       end
 
       it 'should start passenger in production environment on the port 3000' do
         subject.should_receive(:system).with('passenger start --daemonize --environment production').and_return(true)
         Guard::UI.should_receive(:info).with("Passenger standalone started.")
-        subject.start_passenger('--daemonize --environment production').should be_true
+        subject.start_passenger('--daemonize --environment production').should be true
       end
 
       it 'should start passenger in development environment on the port 1337' do
         subject.should_receive(:system).with('passenger start --port 1337 --daemonize').and_return(true)
         Guard::UI.should_receive(:info).with("Passenger standalone started.")
-        subject.start_passenger('--port 1337 --daemonize').should be_true
+        subject.start_passenger('--port 1337 --daemonize').should be true
       end
 
       it 'should start passenger under sudo if sudo option set' do
         subject.should_receive(:system).with('rvmsudo passenger start --port 80 --daemonize').and_return(true)
         Guard::UI.should_receive(:info).with("Passenger standalone started.")
-        quietly { subject.start_passenger('--port 80 --daemonize', 'rvmsudo').should be_true }
+        quietly { subject.start_passenger('--port 80 --daemonize', 'rvmsudo').should be true }
       end
 
       it 'should fail to start passenger in development environment on the port 1' do
         subject.should_receive(:system).with('passenger start --port 1 --daemonize').and_return(false)
         Guard::UI.should_receive(:error).with("Passenger standalone failed to start!")
         expect {
-          quietly { subject.start_passenger('--port 1 --daemonize').should be_false }
+          quietly { subject.start_passenger('--port 1 --daemonize').should be false }
         }.to throw_symbol(:task_has_failed)
       end
     end
@@ -50,7 +50,7 @@ describe Guard::Passenger::Runner do
         subject.should_not_receive(:system).with('passenger start --daemonize')
         Guard::UI.should_receive(:error).with("Passenger standalone is not installed. You need at least Passenger version >= 3.0.0.\nPlease run 'gem install passenger' or add it to your Gemfile.")
         expect {
-          quietly { subject.start_passenger('--daemonize').should be_false }
+          quietly { subject.start_passenger('--daemonize').should be false }
         }.to throw_symbol(:task_has_failed)
       end
     end
@@ -59,12 +59,12 @@ describe Guard::Passenger::Runner do
   describe '#passenger_standalone_installed?' do
     it 'should not have passenger >= 3 installed' do
       subject.should_receive(:gem).with("passenger", ">=3.0.0").and_raise(Gem::LoadError)
-      subject.passenger_standalone_installed?.should be_false
+      subject.passenger_standalone_installed?.should be false
     end
 
     it 'should have passenger >= 3 installed' do
       subject.should_receive(:gem).with("passenger", ">=3.0.0").and_return(true)
-      subject.passenger_standalone_installed?.should be_true
+      subject.passenger_standalone_installed?.should be true
     end
   end
 
@@ -116,7 +116,7 @@ describe Guard::Passenger::Runner do
       end
 
       it 'should return true if restart succeeds' do
-        subject.restart_passenger.should be_true
+        subject.restart_passenger.should be true
       end
     end
 
@@ -132,7 +132,7 @@ describe Guard::Passenger::Runner do
 
       it 'should return false if restart fails' do
         expect {
-          quietly { subject.restart_passenger.should be_false }
+          quietly { subject.restart_passenger.should be false }
         }.to throw_symbol(:task_has_failed)
       end
     end
