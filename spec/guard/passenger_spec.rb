@@ -2,64 +2,80 @@ require 'spec_helper'
 
 describe Guard::Passenger do
 
+  let(:default) { instance_double("Guard::Group") }
+  let(:test) { instance_double("Guard::Group") }
+
+  let(:session) { instance_double("Guard::Internals::Session") }
+  let(:groups) { instance_double("Guard::Internals::Groups") }
+  let(:state) { instance_double("Guard::Internals::State") }
+
+  before do
+    allow(groups).to receive(:add).with(:default).and_return(default)
+    allow(groups).to receive(:add).with(:test).and_return(test)
+
+    allow(session).to receive(:groups).and_return(groups)
+    allow(state).to receive(:session).and_return(session)
+    allow(Guard).to receive(:state).and_return(state)
+  end
+
   describe 'options' do
     describe 'standalone' do
       it 'should be true by default' do
-        subject = Guard::Passenger.new([])
+        subject = Guard::Passenger.new()
         subject.should be_standalone
       end
 
       it 'should be true if set to true' do
-        subject = Guard::Passenger.new([], { :standalone => true })
+        subject = Guard::Passenger.new({ :standalone => true })
         subject.should be_standalone
       end
 
       it 'should be false if set so' do
-        subject = Guard::Passenger.new([], { :standalone => false })
+        subject = Guard::Passenger.new({ :standalone => false })
         subject.should_not be_standalone
       end
     end
 
     describe 'ping' do
       it 'should be false by default' do
-        subject = Guard::Passenger.new([])
-        subject.ping.should be_false
+        subject = Guard::Passenger.new()
+        subject.ping.should be_falsey
       end
 
       it 'should be false if set so' do
-        subject = Guard::Passenger.new([], { :ping => false })
-        subject.ping.should be_false
+        subject = Guard::Passenger.new({ :ping => false })
+        subject.ping.should be false
       end
 
       it 'should be true if set so' do
-        subject = Guard::Passenger.new([], { :ping => true })
+        subject = Guard::Passenger.new({ :ping => true })
         subject.ping.should == '/'
       end
 
       it 'should be true if set to "foo"' do
-        subject = Guard::Passenger.new([], { :ping => 'foo' })
+        subject = Guard::Passenger.new({ :ping => 'foo' })
         subject.ping.should == 'foo'
       end
     end
 
     describe 'sudo' do
       it 'should be blank by default' do
-        subject = Guard::Passenger.new([])
+        subject = Guard::Passenger.new()
         subject.sudo.should == ''
       end
 
       it 'should be blank if set to false' do
-        subject = Guard::Passenger.new([], { :sudo => false })
+        subject = Guard::Passenger.new({ :sudo => false })
         subject.sudo.should == ''
       end
 
       it 'should be "sudo" if set to true' do
-        subject = Guard::Passenger.new([], { :sudo => true })
+        subject = Guard::Passenger.new({ :sudo => true })
         subject.sudo.should == 'sudo'
       end
 
       it 'should be "rvmsudo" if set to "rvmsudo"' do
-        subject = Guard::Passenger.new([], { :sudo => 'rvmsudo' })
+        subject = Guard::Passenger.new({ :sudo => 'rvmsudo' })
         subject.sudo.should == 'rvmsudo'
       end
     end
@@ -67,46 +83,46 @@ describe Guard::Passenger do
 
   describe 'port' do
     it 'should be 3000 if not set' do
-      subject.should_receive(:cli_start).any_number_of_times.and_return('')
+      subject.should_receive(:cli_start).at_least(1).times.and_return('')
       subject.send(:port).should == '3000'
     end
 
     it 'should be 1337 if cli is set to -p 1337' do
-      subject.should_receive(:cli_start).any_number_of_times.and_return('-p 1337')
+      subject.should_receive(:cli_start).at_least(1).times.and_return('-p 1337')
       subject.send(:port).should == '1337'
     end
 
     it 'should be 1337 if cli is set to --port 1337' do
-      subject.should_receive(:cli_start).any_number_of_times.and_return('--port 1337')
+      subject.should_receive(:cli_start).at_least(1).times.and_return('--port 1337')
       subject.send(:port).should == '1337'
     end
   end
 
   describe 'address' do
     it 'should be 0.0.0.0 if not set' do
-      subject.should_receive(:cli_start).any_number_of_times.and_return('')
+      subject.should_receive(:cli_start).at_least(1).times.and_return('')
       subject.send(:address).should == '0.0.0.0'
     end
 
     it 'should be me.local if cli is set to -a me.local' do
-      subject.should_receive(:cli_start).any_number_of_times.and_return('-a me.local')
+      subject.should_receive(:cli_start).at_least(1).times.and_return('-a me.local')
       subject.send(:address).should == 'me.local'
     end
 
     it 'should be 1337 if cli is set to --address me.local' do
-      subject.should_receive(:cli_start).any_number_of_times.and_return('--address me.local')
+      subject.should_receive(:cli_start).at_least(1).times.and_return('--address me.local')
       subject.send(:address).should == 'me.local'
     end
   end
 
   describe 'pid-file' do
     it 'should be nil if not set' do
-      subject.should_receive(:cli_start).any_number_of_times.and_return('')
+      subject.should_receive(:cli_start).at_least(1).times.and_return('')
       subject.send(:pid_file).should == nil
     end
 
     it 'should be me.local if cli is set to --pid-file /usr/passenger.pid' do
-      subject.should_receive(:cli_start).any_number_of_times.and_return('--pid-file /usr/passenger.pid')
+      subject.should_receive(:cli_start).at_least(1).times.and_return('--pid-file /usr/passenger.pid')
       subject.send(:pid_file).should == '/usr/passenger.pid'
     end
   end
@@ -144,7 +160,7 @@ describe Guard::Passenger do
     end
 
     it 'should call `rvmsudo passenger start -p 80` command if sudo is set to "rvmsudo" and port is set to 80' do
-      subject = Guard::Passenger.new([], { :sudo => 'rvmsudo' })
+      subject = Guard::Passenger.new({ :sudo => 'rvmsudo' })
       subject.should_receive(:cli_start).and_return('--daemonize --port 80')
       Guard::Passenger::Runner.should_receive(:start_passenger).with('--daemonize --port 80', 'rvmsudo').and_return(true)
       subject.start
@@ -212,28 +228,28 @@ describe Guard::Passenger do
 
       it 'should return true if `touch tmp/restart.txt\' command succeeds' do
         Guard::Passenger::Runner.stub(:restart_passenger).and_return(true)
-        subject.send(method).should be_true
+        subject.send(method).should be true
       end
 
       it 'should return false if `touch tmp/restart.txt\' command fails' do
         Guard::Passenger::Runner.stub(:restart_passenger).and_return(false)
-        subject.send(method).should be_false
+        subject.send(method).should be false
       end
 
       it 'should ping localhost:3000/ if ping is set to true' do
-        subject = Guard::Passenger.new([], { :ping => true })
+        subject = Guard::Passenger.new({ :ping => true })
         Guard::Passenger::Pinger.should_receive(:ping).with('0.0.0.0', "3000", true, '/')
         subject.send(method)
       end
 
       it 'should ping localhost:3000/ if ping is set to true and notifications are disabled' do
-        subject = Guard::Passenger.new([], { :ping => true, :notification => false })
+        subject = Guard::Passenger.new({ :ping => true, :notification => false })
         Guard::Passenger::Pinger.should_receive(:ping).with('0.0.0.0', "3000", false, '/')
         subject.send(method)
       end
 
       it 'should ping localhost:3000/test if ping is set to true and notifications are disabled' do
-        subject = Guard::Passenger.new([], { :ping => '/test', :notification => false })
+        subject = Guard::Passenger.new({ :ping => '/test', :notification => false })
         Guard::Passenger::Pinger.should_receive(:ping).with('0.0.0.0', "3000", false, '/test')
         subject.send(method)
       end
